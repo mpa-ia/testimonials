@@ -7,6 +7,7 @@ const db = [
     {id: 4, author: 'Anne Doe', text: 'Perfect service'},
     {id: 5, author: 'Simon Doe', text: 'They respect clients'},
 ];
+
 const app = express();
 
 app.use(express.json());
