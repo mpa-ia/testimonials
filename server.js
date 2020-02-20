@@ -16,6 +16,10 @@ app.get('/testimonials', (req, res) => {
     res.json(db);
 });
 
+app.get('/testimonials/:id', (req, res) => {
+    res.json(db.filter(data => data.id == req.params.id));
+});
+
 app.listen(8000, () => {
     console.log('Server is running on port: 8000');
   });
