@@ -1,6 +1,6 @@
 const express = require('express');
 
-const db = [
+let db = [
     {id: 1, author: 'John Doe', text: 'This company is worth every coin!'},
     {id: 2, author: 'Amanda Doe', text: 'They really know how to make you happy.'},
     {id: 3, author: 'Peter Doe', text: 'High quality products'},
@@ -18,6 +18,11 @@ app.get('/testimonials', (req, res) => {
 
 app.get('/testimonials/:id', (req, res) => {
     res.json(db.filter(data => data.id == req.params.id));
+});
+
+app.delete('/testimonials/:id', (req, res) => {
+    db = db.filter(data => data.id != req.params.id);
+    res.json({ message: 'OK' });
 });
 
 app.listen(8000, () => {
