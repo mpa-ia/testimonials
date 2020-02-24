@@ -1,4 +1,5 @@
 const express = require('express');
+const uuidv1 = require('uuid/v1');
 
 let db = [
     {id: 1, author: 'John Doe', text: 'This company is worth every coin!'},
@@ -19,6 +20,16 @@ app.get('/testimonials', (req, res) => {
 
 app.get('/testimonials/:id', (req, res) => {
     res.json(db.filter(data => data.id == req.params.id));
+});
+
+app.post('/testimonials', (req, res) => {
+    const newData = {
+        id: uuidv1(),
+        author: req.body.author,
+        text: req.body.text,
+    };
+    db.push(newData);
+    res.json({ message: 'OK' });
 });
 
 app.put('/testimonials/:id', (req, res) => {
