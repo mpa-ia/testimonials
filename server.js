@@ -10,6 +10,7 @@ let db = [
 
 const app = express();
 
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.get('/testimonials', (req, res) => {
@@ -18,6 +19,12 @@ app.get('/testimonials', (req, res) => {
 
 app.get('/testimonials/:id', (req, res) => {
     res.json(db.filter(data => data.id == req.params.id));
+});
+
+app.put('/testimonials/:id', (req, res) => {
+    console.log(req.body);
+    db = db.map(data => data.id == req.params.id? {...data, author: req.body.author, text: req.body.text } : data);
+    res.json({ message: 'OK' });
 });
 
 app.delete('/testimonials/:id', (req, res) => {
