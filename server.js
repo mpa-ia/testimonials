@@ -1,25 +1,17 @@
 const express = require('express');
 const uuidv1 = require('uuid/v1');
-
-let db = [
-    {id: 1, author: 'John Doe', text: 'This company is worth every coin!'},
-    {id: 2, author: 'Amanda Doe', text: 'They really know how to make you happy.'},
-    {id: 3, author: 'Peter Doe', text: 'High quality products'},
-    {id: 4, author: 'Anne Doe', text: 'Perfect service'},
-    {id: 5, author: 'Simon Doe', text: 'They respect clients'},
-];
+const db = require('./db/db.js');
 
 const app = express();
-
-app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
+console.log(db);
 app.get('/testimonials', (req, res) => {
-    res.json(db);
+    res.json(db.testimonials);
 });
 
 app.get('/testimonials/:id', (req, res) => {
-    res.json(db.filter(data => data.id == req.params.id));
+    res.json(db.testimonials.filter(data => data.id == req.params.id));
 });
 
 app.post('/testimonials', (req, res) => {
@@ -28,18 +20,18 @@ app.post('/testimonials', (req, res) => {
         author: req.body.author,
         text: req.body.text,
     };
-    db.push(newData);
+    db.testimonials.push(newData);
     res.json({ message: 'OK' });
 });
 
 app.put('/testimonials/:id', (req, res) => {
     console.log(req.body);
-    db = db.map(data => data.id == req.params.id? {...data, author: req.body.author, text: req.body.text } : data);
+    db.testimonials = db.testimonials.map(data => data.id == req.params.id? {...data, author: req.body.author, text: req.body.text } : data);
     res.json({ message: 'OK' });
 });
 
 app.delete('/testimonials/:id', (req, res) => {
-    db = db.filter(data => data.id != req.params.id);
+    db.testimonials = db.testimonials.filter(data => data.id != req.params.id);
     res.json({ message: 'OK' });
 });
 
