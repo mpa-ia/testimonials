@@ -1,12 +1,12 @@
 const express = require('express');
-const uuidv1 = require('uuid/v1');
-const db = require('./db/db.js');
+const cors = require('cors');
 
 const testimonialsRoutes = require('./routes/testimonials.routes');
 const concertsRoutes = require('./routes/concerts.routes');
 const seatsRoutes = require('./routes/seats.routes');
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
