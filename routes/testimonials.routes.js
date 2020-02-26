@@ -7,15 +7,13 @@ router.route('/testimonials').get((req, res) => {
     res.json(db.testimonials);
 });
 
+router.route('/testimonials/random').get((req, res) => {
+    res.json(db.testimonials[Math.floor(Math.random() * db.testimonials.length)]);
+});
+
 router.route('/testimonials/:id').get((req, res) => {
     res.json(db.testimonials.filter(data => data.id == req.params.id));
 });
-
-/* router.route('/testimonials/random').get((req, res) => {
-    const random = Math.floor(Math.random() * db.testimonials.length);
-    console.log(random);
-    res.json(db.testimonials.filter(data => data.id == random));
-}); */
 
 router.route('/testimonials').post((req, res) => {
     const newData = {
