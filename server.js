@@ -15,6 +15,23 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname + '/client/build')));
 
+const server = app.listen(process.env.PORT || 8000, () => {
+    console.log('Server is running on port: 8000');
+});
+
+const io = socket(server);
+
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+
+io.on('connection', socket => {
+    process.on('seatsUpdated', (takenSeats) => {
+        socket.broadcast.emit('seatsUpdated', takenSeats);
+    });
+});
+
 app.use('/api', testimonialsRoutes);
 app.use('/api', concertsRoutes);
 app.use('/api', seatsRoutes);
@@ -37,14 +54,3 @@ db.once('open', () => {
   });
   
 db.on('error', err => console.log('Error' + err)); */
-
-const server = app.listen(process.env.PORT || 8000, () => {
-    console.log('Server is running on port: 8000');
-});
-
-const io = socket(server);
-
-io.on('connection', socket => {
-    console.log(`New client  - ${socket.id}`);
-
-});
