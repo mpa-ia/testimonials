@@ -34,7 +34,13 @@ exports.postNew = async (req, res) => {
     try {
         const { day, seat, client, email } = req.body;
         const newSeat = new Seat({ day: day, seat: seat, client: client, email: email });
-        await Seat.exists({ day: day, seat: seat })? res.status(409).json({ message: "The slot is already taken"}) : await newSeat.save();
+        if (await Seat.exists({ day: day, seat: seat })) {
+            res.status(409).json({ message: "The slot is already taken"});
+        } else {
+            await newSeat.save();
+            const takenSeats = await Seat.find();
+            req.io.emit('seatsUpdated', takenSeats);
+        }
         res.json(newSeat);
     } catch (err) {
         res.status(500).json(err);
