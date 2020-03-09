@@ -23,9 +23,6 @@ const io = socket(server);
 
 io.on('connection', socket => {
     console.log(`new socket - ${socket.id}`);
-    socket.on('hello', () => {
-        console.log('received hello');
-    });
 });
 
 app.use((req, res, next) => {
