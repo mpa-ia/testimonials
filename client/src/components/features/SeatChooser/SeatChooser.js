@@ -28,12 +28,14 @@ class SeatChooser extends React.Component {
     else if(isTaken(seatId)) return <Button key={seatId} className="seats__seat" disabled color="secondary">{seatId}</Button>;
     else return <Button key={seatId} color="primary" className="seats__seat" outline onClick={(e) => updateSeat(e, seatId)}>{seatId}</Button>;
   }
-
+  countFreeSeats = () => {
+    const { seats, chosenDay } = this.props;
+    return 50 - seats.filter(el =>  el.day === chosenDay).length;
+  }
   render() {
 
     const { prepareSeat } = this;
     const { requests } = this.props;
-
     return (
       <div>
         <h3>Pick a seat</h3>
@@ -42,6 +44,7 @@ class SeatChooser extends React.Component {
         { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].success) && <div className="seats">{[...Array(50)].map((x, i) => prepareSeat(i+1) )}</div>}
         { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].pending) && <Progress animated color="primary" value={50} /> }
         { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].error) && <Alert color="warning">Couldn't load seats...</Alert> }
+        <small className="form-text text-muted">Free seats: {this.countFreeSeats()}/50</small>
       </div>
     )
   };
