@@ -1,19 +1,22 @@
+import './SeatChooser.scss';
+
 import React from 'react';
 import { Button, Progress, Alert } from 'reactstrap';
-
-import './SeatChooser.scss';
+const io = require('socket.io-client');
 
 class SeatChooser extends React.Component {
   
   componentDidMount() {
-    const { loadSeats } = this.props;
+    const { loadSeats, loadSeatsData } = this.props;
+    process.env.NODE_ENV === 'production'? this.socket = io.connect() : this.socket = io.connect('http://localhost:8000');
+    this.socket.on('seatsUpdated', (takenSeats) => {
+      loadSeatsData(takenSeats);
+    });
     loadSeats();
-    this.refreshSeats = setInterval(() => loadSeats(), 120000);
   }
 
   isTaken = (seatId) => {
     const { seats, chosenDay } = this.props;
-
     return (seats.some(item => (item.seat === seatId && item.day === chosenDay)));
   }
 
@@ -25,16 +28,14 @@ class SeatChooser extends React.Component {
     else if(isTaken(seatId)) return <Button key={seatId} className="seats__seat" disabled color="secondary">{seatId}</Button>;
     else return <Button key={seatId} color="primary" className="seats__seat" outline onClick={(e) => updateSeat(e, seatId)}>{seatId}</Button>;
   }
-  
-  componentWillUnmount () {
-    clearInterval(this.refreshSeats);
+  countFreeSeats = () => {
+    const { seats, chosenDay } = this.props;
+    return 50 - seats.filter(el =>  el.day === chosenDay).length;
   }
-
   render() {
 
     const { prepareSeat } = this;
     const { requests } = this.props;
-
     return (
       <div>
         <h3>Pick a seat</h3>
@@ -43,6 +44,7 @@ class SeatChooser extends React.Component {
         { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].success) && <div className="seats">{[...Array(50)].map((x, i) => prepareSeat(i+1) )}</div>}
         { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].pending) && <Progress animated color="primary" value={50} /> }
         { (requests['LOAD_SEATS'] && requests['LOAD_SEATS'].error) && <Alert color="warning">Couldn't load seats...</Alert> }
+        <small className="form-text text-muted">Free seats: {this.countFreeSeats()}/50</small>
       </div>
     )
   };
