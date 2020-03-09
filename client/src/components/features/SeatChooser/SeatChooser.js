@@ -1,21 +1,22 @@
+import './SeatChooser.scss';
+
 import React from 'react';
 import { Button, Progress, Alert } from 'reactstrap';
-import io from 'socket.io-client';
-
-import './SeatChooser.scss';
+const io = require('socket.io-client');
 
 class SeatChooser extends React.Component {
   
   componentDidMount() {
+    const { loadSeats, loadSeatsData } = this.props;
     process.env.NODE_ENV === 'production'? this.socket = io.connect() : this.socket = io.connect('http://localhost:8000');
-    const { loadSeats } = this.props;
+    this.socket.on('seatsUpdated', (takenSeats) => {
+      loadSeatsData(takenSeats);
+    });
     loadSeats();
-    this.refreshSeats = setInterval(() => loadSeats(), 120000);
   }
 
   isTaken = (seatId) => {
     const { seats, chosenDay } = this.props;
-
     return (seats.some(item => (item.seat === seatId && item.day === chosenDay)));
   }
 
@@ -26,10 +27,6 @@ class SeatChooser extends React.Component {
     if(seatId === chosenSeat) return <Button key={seatId} className="seats__seat" color="primary">{seatId}</Button>;
     else if(isTaken(seatId)) return <Button key={seatId} className="seats__seat" disabled color="secondary">{seatId}</Button>;
     else return <Button key={seatId} color="primary" className="seats__seat" outline onClick={(e) => updateSeat(e, seatId)}>{seatId}</Button>;
-  }
-  
-  componentWillUnmount () {
-    clearInterval(this.refreshSeats);
   }
 
   render() {

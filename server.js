@@ -21,15 +21,16 @@ const server = app.listen(process.env.PORT || 8000, () => {
 
 const io = socket(server);
 
+io.on('connection', socket => {
+    console.log(`new socket - ${socket.id}`);
+    socket.on('hello', () => {
+        console.log('received hello');
+    });
+});
+
 app.use((req, res, next) => {
     req.io = io;
     next();
-});
-
-io.on('connection', socket => {
-    process.on('seatsUpdated', (takenSeats) => {
-        socket.broadcast.emit('seatsUpdated', takenSeats);
-    });
 });
 
 app.use('/api', testimonialsRoutes);
