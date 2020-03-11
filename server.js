@@ -3,12 +3,14 @@ const cors = require('cors');
 const path = require('path');
 const mongoose = require('mongoose');
 const socket = require('socket.io');
+const helmet = require('helmet');
 
 const testimonialsRoutes = require('./routes/testimonials.routes');
 const concertsRoutes = require('./routes/concerts.routes');
 const seatsRoutes = require('./routes/seats.routes');
 
 const app = express();
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -41,14 +43,14 @@ app.get('*', (req, res) => {
 });
 
 app.use((req, res) => {
-    res.status(404).send({ message: 'not found...'});
+    res.status(404).send({ message: 'not found...' });
 });
 
-mongoose.connect('mongodb+srv://maripab:password2@cluster0-314sb.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.APP_PASSWORD}@cluster0-314sb.mongodb.net/NewWaveDB?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
     console.log('Conected to the database');
-  });
-  
+});
+
 db.on('error', err => console.log('Error' + err));
