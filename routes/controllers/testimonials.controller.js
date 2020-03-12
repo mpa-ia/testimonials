@@ -1,4 +1,5 @@
 const Testimonial = require('../models/testimonial.model');
+const sanitize = require('mongo-sanitize');
 
 exports.getAll = async (req, res) => {
     try {
@@ -33,7 +34,7 @@ exports.getById = async (req, res) => {
 exports.postNew = async (req, res) => {
     try {
         const { author, text } = req.body;
-        const newTestimonial = new Testimonial({ author: author, text: text });
+        const newTestimonial = new Testimonial({ author: sanitize(author), text: sanitize(text) });
         await newTestimonial.save();
         res.json(newTestimonial);
     } catch (err) {
@@ -44,7 +45,7 @@ exports.postNew = async (req, res) => {
 exports.modifyById = (req, res) => {
     const { author, text } = req.body;
     try {
-        Testimonial.findByIdAndUpdate(req.params.id, { $set: { author: author, text: text }}, { new: true }, (err, doc) => {
+        Testimonial.findByIdAndUpdate(req.params.id, { $set: { author: author, text: text } }, { new: true }, (err, doc) => {
             err ? res.status(404).json({ message: 'Not found...' }) : res.json(doc);
         });
     } catch (err) {
