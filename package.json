@@ -6,8 +6,8 @@
   "scripts": {
     "nodemon": "./node_modules/.bin/nodemon server.js",
     "build": "cd client && yarn install && yarn build",
-    "test": "mocha \"./{,!(node_modules)/**/}*.test.js\"",
-    "test:watch": "onchange \"./**/*.js\" -i -k -- yarn test"
+    "test": "mocha \"./tests/**/*.test.js\"",
+    "test:watch": "onchange \"./**/*.js\" -i -k -- yarn run test"
   },
   "dependencies": {
     "chai": "4.2.0",
