@@ -3,12 +3,14 @@ const cors = require('cors');
 const path = require('path');
 const mongoose = require('mongoose');
 const socket = require('socket.io');
+const helmet = require('helmet');
 
 const testimonialsRoutes = require('./routes/testimonials.routes');
 const concertsRoutes = require('./routes/concerts.routes');
 const seatsRoutes = require('./routes/seats.routes');
 
 const app = express();
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -46,7 +48,7 @@ app.use((req, res) => {
 
 console.log(process.env.NODE_ENV);
 process.env.NODE_ENV === "production" ?
-    mongoose.connect('mongodb+srv://maripab:password2@cluster0-314sb.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true }) :
+    mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.APP_PASSWORD}@cluster0-314sb.mongodb.net/NewWaveDB?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true }) :
     mongoose.connect('mongodb://localhost:27017/NewWaveDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
