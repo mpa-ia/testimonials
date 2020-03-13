@@ -46,7 +46,6 @@ app.use((req, res) => {
     res.status(404).send({ message: 'not found...' });
 });
 
-console.log(process.env.NODE_ENV);
 process.env.NODE_ENV === "production" ?
     mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.APP_PASSWORD}@cluster0-314sb.mongodb.net/NewWaveDB?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true }) :
     mongoose.connect('mongodb://localhost:27017/NewWaveDB', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -58,3 +57,7 @@ db.once('open', () => {
 });
 
 db.on('error', err => console.log('Error' + err));
+
+console.log(process.env.NODE_ENV);
+
+module.exports = server;
