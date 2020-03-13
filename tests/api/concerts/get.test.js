@@ -1,9 +1,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../../../server.js');
-// const Concert = require('../../../routes/models/concert.model');
 const mongoose = require('mongoose');
-const Concert = mongoose.models.Concert;
 
 chai.use(chaiHttp);
 
@@ -17,7 +15,6 @@ describe('GET /api/concerts', () => {
             expect(res.status).to.be.equal(200);
             expect(res.body).to.be.an('array');
             expect(res.body.length).to.be.equal(3);
-            expect();
         } catch (e) {
             console.log(e);
         }
