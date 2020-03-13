@@ -1,13 +1,14 @@
 {
-  "name": "testimonials",
+  "name": "new-wave-festival",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "nodemon": "./node_modules/.bin/nodemon server.js",
+    "start": "SET NODE_ENV = 'production' && nodemon server.js",
+    "start:dev": "SET NODE_ENV = 'dev' && nodemon server.js",
     "build": "cd client && yarn install && yarn build",
-    "test": "mocha \"./tests/**/*.test.js\"",
-    "test:watch": "onchange \"./**/*.js\" -i -k -- yarn run test"
+    "test": "SET NODE_ENV = 'dev' && mocha \"./tests/**/*.test.js\"",
+    "test:watch": "SET NODE_ENV = 'dev' && onchange \"./**/*.js\" -i -k -- yarn run test"
   },
   "dependencies": {
     "chai": "4.2.0",
